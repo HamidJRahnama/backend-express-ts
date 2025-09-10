@@ -2,11 +2,14 @@
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 import type { Request, Response, NextFunction } from "express";
+import ClientErrors from "../errors/clientErrors.ts";
 
 function validationMiddleware(type: any) {
   return async (req: Request, res: Response, next: NextFunction) => {
+    const clientError=new ClientErrors()
     // تبدیل body به کلاس مربوطه
     const dtoInstance = plainToInstance(type, req.body);
+
 
     // ولیدیشن
     const errors = await validate(dtoInstance, {
@@ -14,15 +17,22 @@ function validationMiddleware(type: any) {
       forbidNonWhitelisted: true, // اگر فیلدی اضافی باشه خطا بده
     });
 
+
     if (errors.length > 0) {
-      const formattedErrors = errors.map((err) => ({
-        property: err.property,
-        constraints: err.constraints,
+      const formattedErrors = errors.map(err => ({
+        field: err.property,
+        messages: Object.values(err.constraints || {})
       }));
-      return res.status(400).json({
-        message: "Validation failed",
-        errors: formattedErrors,
-      });
+      clientError.data=[]
+      clientError.errors=formattedErrors
+
+      res.status(400).json(clientError);
+
+      // res.status(400).json({
+      //   success: false,
+      //   message: "Validation failed",
+      //   errors: formattedErrors
+      // });
     }
 
     // اگر مشکلی نبود بریم مرحله بعد
