@@ -2,8 +2,8 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist",
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "target": "esnext",
     "strict": true,
     "esModuleInterop": true,
@@ -19,6 +19,10 @@
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
-    "noEmit": true
+    "noEmit": true,
+
+    "strictPropertyInitialization": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": false
   }
 }

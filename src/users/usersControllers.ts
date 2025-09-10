@@ -2,6 +2,8 @@ import type { Request, Response } from "express";
 import { Router } from "express";
 import { authMiddleware } from "../middlewares/index.ts";
 import { deleteUser, getAllUsers, getUser, postUser, putUser } from "./usersServices.ts";
+import UsersCreateDto from "./dtos/usersCreateDto.ts";
+import validationMiddleware from "../middlewares/validateMiddleware.ts";
 
 const router = Router()
 router.use(authMiddleware);
@@ -15,10 +17,10 @@ router.get(`/:id` , (req:Request , res:Response)=>{
     console.log("/Users/{id} GET")
     getUser(req, res);
 })
-router.post(`/` , (req:Request , res:Response)=>{
-    console.log("/Users POST")
+router.post(`/`, validationMiddleware(UsersCreateDto), (req: Request, res: Response) => {
+    console.log("/Users POST");
     postUser(req, res);
-})
+});
 router.put(`/:id` , (req:Request , res:Response)=>{
     console.log("/Users/{id} GET")
     putUser(req, res);
