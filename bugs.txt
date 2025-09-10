@@ -1,0 +1,50 @@
+❌ باگ چی بود؟
+
+خطا:
+
+ECMAScript imports and exports cannot be written in a CommonJS file under 'verbatimModuleSyntax'. ts(1295)
+
+
+توی کد از ESM import استفاده کرده بودی:
+
+import express from "express";
+
+
+ولی پروژه‌ات به صورت پیش‌فرض CommonJS بود (چون در package.json فیلد "type" تعریف نشده بود → Node پیش‌فرض رو CommonJS می‌گیره).
+
+TypeScript هم با گزینه‌ی "verbatimModuleSyntax": true خیلی سختگیر شد و گفت:
+«تو داری سینتکس ESM می‌نویسی ولی فایل‌هات CommonJS هستن → خطا بده.»
+
+✅ راهکار
+
+دو راه داشتی:
+
+1. مدرن (ESM)
+
+اضافه کردن:
+
+"type": "module"
+
+
+به package.json
+
+ست کردن module و moduleResolution روی NodeNext در tsconfig.json
+
+🔹 نتیجه: می‌تونی راحت از import ... from استفاده کنی.
+
+2. سنتی (CommonJS)
+
+تغییر کد به سبک CommonJS:
+
+import express = require("express");
+import { Request, Response, NextFunction } from "express";
+
+
+نیازی به "type": "module" نیست.
+
+🔹 نتیجه: پروژه روی CommonJS می‌مونه و همه چیز با require یا import = require(...) کار می‌کنه.
+
+✨ راهی که تو انتخاب کردی
+
+راه ۱ (ESM) → یعنی توی package.json مقدار "type": "module" اضافه کردی.
+الان می‌تونی بدون خطا از import express from "express"; استفاده کنی و همه چی سازگاره.
