@@ -3,6 +3,7 @@ import type { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import usersControllers from "./users/usersControllers.ts";
 import productsControllers from "./products/productsControllers.ts";
+import mongoose from "mongoose";
 
 import { authMiddleware } from "./middlewares/index.ts";
 
@@ -54,7 +55,16 @@ app.use(`/products`,productsControllers)
 
 
 
+mongoose.connect('mongodb://localhost:27017/expressdb',{
+  autoIndex:true,
 
-app.listen(3000, () => {
-  console.log('Server is running on http://localhost:3000')
+}).then(()=>{
+  console.log("Connected to MongoDB")
+  app.listen(3000, () => {
+    console.log('Server is running on http://localhost:3000');
+  })
+}).catch((err)=>{
+  console.error("Error connecting to MongoDB:", err)
 })
+
+

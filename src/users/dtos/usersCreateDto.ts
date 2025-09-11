@@ -23,25 +23,28 @@ class UsersCreateDto {
     @IsDefined()
     password: string;
 
-    @IsArray()
     @IsOptional()
-    skills: string[];
+    age: number;
 
-    @IsOptional()
-    @IsEnum(UserRole)
-    role?: UserRole; 
+    // @IsArray()
+    // @IsOptional()
+    // skills: string[];
 
-    @IsOptional()
-    @IsDateString()
-    dateOfBirth?: string; 
+    // @IsOptional()
+    // @IsEnum(UserRole)
+    // role?: UserRole; 
 
-    @IsOptional()
-    @IsNotEmpty()
-    avatarUrl?: string; 
+    // @IsOptional()
+    // @IsDateString()
+    // dateOfBirth?: string; 
 
-    @IsOptional()
-    @IsNotEmpty()
-    bio?: string; 
+    // @IsOptional()
+    // @IsNotEmpty()
+    // avatarUrl?: string; 
+
+    // @IsOptional()
+    // @IsNotEmpty()
+    // bio?: string; 
 }
 
 export default UsersCreateDto;
