@@ -14,18 +14,26 @@ router.get(`/` , (req:Request , res:Response)=>{
     console.log("/Users GET")
     getAllUsers(req, res);
 })
+
+
 router.get(`/:id` , (req:Request , res:Response)=>{
     console.log("/Users/{id} GET")
     getUser(req, res);
 })
+
+
 router.post(`/`, validationMiddleware(UsersCreateDto), (req: Request, res: Response) => {
     const body:User = req.body;
     return postUser(req, res, body);
 });
+
+
 router.put(`/:id` , (req:Request , res:Response)=>{
     console.log("/Users/{id} GET")
     putUser(req, res);
 })
+
+
 router.delete(`/:id` , (req:Request , res:Response)=>{
     console.log("/Users/id DELETE")
     deleteUser(req, res);

@@ -1,9 +1,11 @@
 import express from "express";
 import type { Request, Response, NextFunction } from "express";
 import cors from "cors";
+import mongoose from "mongoose";
+
 import usersControllers from "./users/usersControllers.ts";
 import productsControllers from "./products/productsControllers.ts";
-import mongoose from "mongoose";
+import authControllers from "./auth/authControllers.ts";
 
 import { authMiddleware } from "./middlewares/index.ts";
 
@@ -50,12 +52,13 @@ app.get('/', (req: Request, res:Response) => {
 // users API
 app.use(`/users`, usersControllers)
 app.use(`/products`,productsControllers)
+app.use(`/auth`,authControllers)
 
 
 
 
 
-mongoose.connect('mongodb://localhost:27017/expressdb',{
+mongoose.connect('mongodb://mongodbadmin:mongodbadmin@192.168.43.129:27017/expressdb?authSource=admin', {
   autoIndex:true,
 
 }).then(()=>{
@@ -66,5 +69,17 @@ mongoose.connect('mongodb://localhost:27017/expressdb',{
 }).catch((err)=>{
   console.error("Error connecting to MongoDB:", err)
 })
+
+// mongoose.connect('mongodb://localhost:27017/expressdb',{
+//   autoIndex:true,
+
+// }).then(()=>{
+//   console.log("Connected to MongoDB")
+//   app.listen(3000, () => {
+//     console.log('Server is running on http://localhost:3000');
+//   })
+// }).catch((err)=>{
+//   console.error("Error connecting to MongoDB:", err)
+// })
 
 

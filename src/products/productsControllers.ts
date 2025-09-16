@@ -11,18 +11,26 @@ router.get(`/` , (req:Request , res:Response)=>{
     console.log("/Products GET")
     getAllProducts(req, res);
 })
+
+
 router.get(`/:id` , (req:Request , res:Response)=>{
     console.log("/Products/{id} GET")
     getProduct(req, res);
 })
+
+
 router.post(`/` , (req:Request , res:Response)=>{
     console.log("/Products POST")
     postProduct(req, res);
 })
+
+
 router.put(`/:id` , (req:Request , res:Response)=>{
     console.log("/Products/{id} GET")
     putProduct(req, res);
 })
+
+
 router.delete(`/:id` , (req:Request , res:Response)=>{
     console.log("/Products/id DELETE")
     deleteProduct(req, res);

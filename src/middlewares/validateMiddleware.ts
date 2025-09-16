@@ -7,14 +7,14 @@ import ClientErrors from "../errors/clientErrors.ts";
 function validationMiddleware(type: any) {
   return async (req: Request, res: Response, next: NextFunction) => {
     const clientError=new ClientErrors()
-    // تبدیل body به کلاس مربوطه
+    
     const dtoInstance = plainToInstance(type, req.body);
 
 
-    // ولیدیشن
+    
     const errors = await validate(dtoInstance, {
-      whitelist: true, // فقط فیلدهای موجود در DTO رو قبول کنه
-      forbidNonWhitelisted: true, // اگر فیلدی اضافی باشه خطا بده
+      whitelist: true, 
+      forbidNonWhitelisted: true,
     });
 
 
@@ -26,7 +26,7 @@ function validationMiddleware(type: any) {
       clientError.data=[]
       clientError.errors=formattedErrors
 
-      res.status(400).json(clientError);
+      return res.status(400).json(clientError);
 
       // res.status(400).json({
       //   success: false,
@@ -35,7 +35,7 @@ function validationMiddleware(type: any) {
       // });
     }
 
-    // اگر مشکلی نبود بریم مرحله بعد
+    
     req.body = dtoInstance;
     next();
   };
