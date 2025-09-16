@@ -1,6 +1,6 @@
 import { IsDefined, IsEmail, MaxLength, MinLength } from "class-validator"
 
-class LoginDtios{
+class LoginDtos{
     @IsDefined()
     @IsEmail()
     email:string
@@ -11,4 +11,4 @@ class LoginDtios{
     password:string
 }
 
-export default LoginDtios
+export default LoginDtos
