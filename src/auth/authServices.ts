@@ -5,81 +5,41 @@ import bcrypt from "bcrypt"
 import type LoginDtos from "./dtos/loginDto.ts"
 import { decodeToken, encodeToken } from "../utils/index.ts"
 
-export const registerUser = async (req: Request, res: Response) => {
-  try {
-    const body: RegisterDto = req.body;
-
-    // Check if user already exists
-    const existingUser = await usersModel.findOne({ email: body.email });
-    if (existingUser) {
-      return res.status(400).send({
-        message: "User email already exists. Please login",
-      });
-    }
-
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(body.password, 10);
-
-    // Save the new user
-    const newUser = await usersModel.create({
-      ...body,
-      password: hashedPassword, // حواست باشه password درست باشه، نه passsword
-    });
-
-    return res.status(201).send({
-      message: "User registered successfully",
-      data: newUser,
-    });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).send({
-      message: "Internal server error",
-      error: err,
-    });
+// Register a new user
+export const registerUser = async (body: RegisterDto) => {
+  // Check if user already exists
+  const existingUser = await usersModel.findOne({ email: body.email });
+  if (existingUser) {
+    throw new Error("UserExists");
   }
+
+  // Hash the password
+  const hashedPassword = await bcrypt.hash(body.password, 10);
+
+  // Save the new user
+  const newUser = await usersModel.create({
+    ...body,
+    password: hashedPassword,
+  });
+
+  return newUser;
 };
 
+// Login user and return token
+export const loginUser = async (body: LoginDtos) => {
+  // Find the user by email
+  const user = await usersModel.findOne({ email: body.email });
+  if (!user) throw new Error("UserNotFound");
 
-export const loginUser = async (req: Request, res: Response) => {
-  try {
-    const body: LoginDtos = req.body;
+  // Check if password exists
+  if (!user.password) throw new Error("NoPasswordStored");
 
-    // پیدا کردن کاربر
-    const user = await usersModel.findOne({ email: body.email });
-    if (!user) {
-      return res.status(400).send({
-        message: "User email does not exist. Please register",
-      });
-    }
+  // Compare password
+  const isPasswordValid = await bcrypt.compare(body.password, user.password);
+  if (!isPasswordValid) throw new Error("InvalidCredentials");
 
-    // مقایسه پسورد
-    if (!body.password) {
-      return res.status(400).send({ message: "Password is required" });
-    }
+  // Generate JWT token
+  const token = encodeToken({ id: user.id });
 
-    if (!user.password) {
-      return res.status(500).send({ message: "User has no password stored" });
-    }
-
-    const isPasswordValid = await bcrypt.compare(body.password, user.password);
-    if (!isPasswordValid) {
-      return res.status(400).send({
-        message: "Invalid credentials",
-      });
-    }
-    
-    // اگر همه‌چیز درست بود
-    const token = encodeToken( {id:user.id} )
-    return res.status(200).send({
-      message: "Login successful",
-      token: token,
-    });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).send({
-      message: "Internal server error",
-      error: err,
-    });
-  }
+  return { user, token };
 };
-
