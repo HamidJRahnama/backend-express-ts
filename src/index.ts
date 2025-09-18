@@ -58,7 +58,7 @@ app.use(`/auth`,authControllers)
 
 
 
-mongoose.connect('mongodb://mongodbadmin:mongodbadmin@192.168.43.129:27017/expressdb?authSource=admin', {
+mongoose.connect('mongodb://mongodbadmin:mongodbadmin@192.168.141.83:27017/expressdb?authSource=admin', {
   autoIndex:true,
 
 }).then(()=>{

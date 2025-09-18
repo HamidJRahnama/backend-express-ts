@@ -3,6 +3,7 @@ import type RegisterDto from "./dtos/registerDto.ts"
 import usersModel from "../models/usersModel.ts"
 import bcrypt from "bcrypt"
 import type LoginDtos from "./dtos/loginDto.ts"
+import { decodeToken, encodeToken } from "../utils/index.ts"
 
 export const registerUser = async (req: Request, res: Response) => {
   try {
@@ -66,11 +67,12 @@ export const loginUser = async (req: Request, res: Response) => {
         message: "Invalid credentials",
       });
     }
-
+    
     // اگر همه‌چیز درست بود
+    const token = encodeToken( {id:user.id} )
     return res.status(200).send({
       message: "Login successful",
-      data: user,
+      token: token,
     });
   } catch (err) {
     console.error(err);
